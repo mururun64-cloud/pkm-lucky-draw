@@ -1,0 +1,17 @@
+{
+  "name": "pkm-lucky-draw-vercel",
+  "version": "2.9.0-vercel",
+  "private": true,
+  "description": "PKM DUN Sentosa Lucky Draw System - Vercel + Supabase",
+  "engines": { "node": ">=20" },
+  "scripts": { "dev": "vercel dev", "start": "vercel dev" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.4",
+    "uuid": "^11.0.3"
+  }
+}
