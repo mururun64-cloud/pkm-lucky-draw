@@ -9,10 +9,17 @@ const { v4: uuid } = require('uuid');
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
-//const supabase = createClient(process.env.SUPABASE_URL || '', process.env.SUPABASE_SERVICE_ROLE_KEY || '', { auth: { persistSession: false } });
+const supabase = createClient(process.env.SUPABASE_URL || '', process.env.SUPABASE_SERVICE_ROLE_KEY || '', { auth: { persistSession: false } });
 const rawSupabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseUrl = rawSupabaseUrl.replace(/\/rest\/v1\/?$/, '');
-const supabase = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '', { auth: { persistSession: false } });
+//const supabase = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '', { auth: { persistSession: false } });
+const supabaseKey = String(
+  process.env.supabase_server_key ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  ''
+).trim();
+
+const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
 const SECRET = process.env.JWT_SECRET || 'CHANGE-ME-IN-VERCEL';
 const STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || 'lucky-draw';
 
