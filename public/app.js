@@ -40,7 +40,7 @@ function dashboard(){
           <div class="eyebrow">PUSAT KHIDMAT MASYARAKAT</div>
           <h1>DUN SENTOSA</h1>
           <div class="hero-line"></div>
-          <h2>LUCKY DRAW SYSTEM</h2>
+         
           <p>Bersama Rakyat&nbsp;&nbsp;•&nbsp;&nbsp;Untuk Sentosa</p>
         </div>
         <div class="hero-slogan">Bersama Rakyat<br><em>Untuk Sentosa</em></div>
