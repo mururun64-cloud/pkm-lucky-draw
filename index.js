@@ -32,7 +32,7 @@ async function list(table, query){ const {data,error}=await query; if(error) thr
 async function getEvent(id){ return one('events', supabase.from('events').select('*').eq('id',id).limit(1)); }
 async function uploadFile(file, folder){ if(!file) return ''; const ext=(file.originalname||'').includes('.') ? '.'+file.originalname.split('.').pop().toLowerCase() : ''; const filePath=`${folder}/${uuid()}${ext}`; const {error}=await supabase.storage.from(STORAGE_BUCKET).upload(filePath,file.buffer,{contentType:file.mimetype||'application/octet-stream',upsert:false}); if(error) throw error; const {data}=supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath); return data.publicUrl; }
 async function duplicateReason(eventId, fullName, nric, contact, excludeId=null){
-  const checks=[['name_key',normalizeName(fullName),'Full Name'],['nric_key',normalizeNric(nric),'NRIC Number'],['contact_key',normalizePhone(contact),'Contact Number']];
+  const checks=[['nric_key',normalizeNric(nric),'NRIC Number']];
   for(const [field,value,label] of checks){ if(!value) continue; let q=supabase.from('participants').select('*').eq('event_id',eventId).eq(field,value).limit(1); if(excludeId) q=q.neq('id',excludeId); const r=await one('participants',q); if(r) return {participant:r,reasons:[label]}; }
   return null;
 }
