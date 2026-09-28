@@ -62,6 +62,10 @@ async function getEventData(id){ const e=await getEvent(id); if(!e) return null;
   list('draws',getSupabase().from('draws').select('*').eq('event_id',id).order('sequence',{ascending:true}))
  ]); return {event:mapEvent(e),prizes:prizes.map(mapPrize),participants:participants.map(p=>mapParticipant(p)),draws}; }
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'index.html'));
+});
+
 app.get('/api/health',(req,res)=>res.json({ok:true,online:true,databaseConfigured:Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)}));
 app.post('/api/login',async(req,res)=>{ try { if(!requireEnv(res)) return; const username=String(req.body.username||'').trim(); const password=String(req.body.password||''); if(!username||!password)return res.status(400).json({error:'Username and password are required.'}); let u=await one('users',getSupabase().from('users').select('*').eq('username',username).limit(1));
   if(!u && username===String(process.env.ADMIN_USERNAME||'admin') && password===String(process.env.ADMIN_PASSWORD||'admin123')){ const created={id:uuid(),username,password:await bcrypt.hash(password,10),created_at:now()}; const r=await getSupabase().from('users').insert(created).select('*').single(); if(r.error) throw r.error; u=r.data; }
