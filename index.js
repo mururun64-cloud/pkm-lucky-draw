@@ -26,7 +26,8 @@ const STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || 'lucky-draw';
 
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(process.cwd(), 'public')));
+//app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.static(process.cwd()));
 
 function now(){ return new Date().toISOString(); }
 function normalizeName(v){ return String(v || '').trim().replace(/\s+/g,' ').toUpperCase(); }
@@ -104,6 +105,7 @@ app.get('/api/reports/events/excel',auth,async(req,res)=>{try{const events=await
 app.post('/api/events/:id/reset',auth,async(req,res)=>{try{const d=await getEventData(req.params.id);if(!d)return res.status(404).json({error:'Event not found'});const full=await list('participants',getSupabase().from('participants').select('*').eq('event_id',req.params.id));const out={version:'2.9-vercel',event:d.event,prizes:d.prizes,participants:full.map(p=>mapParticipant(p,true)),draws:d.draws,exportedAt:now()};const del=await getSupabase().from('events').delete().eq('id',req.params.id);if(del.error)throw del.error;res.json({ok:true,backup:out});}catch(e){res.status(500).json({error:e.message});}});
 app.post('/api/backup/database',auth,async(req,res)=>{try{const events=await list('events',getSupabase().from('events').select('*'));const all=[];for(const e of events){const d=await getEventData(e.id);all.push(d);}res.setHeader('Content-Type','application/json');res.setHeader('Content-Disposition',`attachment; filename="database-backup-${Date.now()}.json"`);res.json({version:'2.9-vercel',exportedAt:now(),events:all});}catch(e){res.status(500).json({error:e.message});}});
 app.get('/api/system/status',auth,(req,res)=>res.json({online:true,database:'Supabase PostgreSQL',storage:STORAGE_BUCKET,node:process.version,vercel:true}));
-app.get('/register.html',(req,res)=>res.sendFile(path.join(process.cwd(),'public','register.html')));
+//app.get('/register.html',(req,res)=>res.sendFile(path.join(process.cwd(),'public','register.html')));
+app.get('/register.html',(req,res)=>res.sendFile(path.join(process.cwd(),'register.html')));
 
 module.exports = app;
